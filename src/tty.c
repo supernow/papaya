@@ -25,6 +25,8 @@ static void kernelsectionn(void);
 #include<mm.h>
 #include<utils.h>
 #include<video_drv.h>
+#include"errno.h"
+#include"unistd.h"
 char tmp[64];
 char*buff;
 extern unsigned p0_addr;
@@ -64,12 +66,11 @@ void tty(void){
 	buff=kmalloc(23);
 	for(int j=0;j<0;j++){
 		oprintf("j=%u,i will do open\n",j);
-//		int fd=open("/mnt/home/wws/dimg",0);
-		int fd=open("/mnt/short");
-		oprintf("fd:%u,inode:%u\n",fd,fd_table[fd].inode);
+		int fd=open("/mnt/home/wws/dimg",0);
+		oprintf("fd:%u,errno:%d,inode:%u\n",fd,errno,fd_table[fd].inode);
 		int newseek=lseek(fd,-2,2);
 		int r_bytes=read(fd,tmp,7);
-		oprintf("r_bytes:%u,newseek:%u\n",r_bytes,newseek);
+//		oprintf("r_bytes:%u,newseek:%u\n",r_bytes,newseek);
 //		while(1);
 	}
 	while(1){

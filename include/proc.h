@@ -1,6 +1,6 @@
 #ifndef PROC_H
 #define PROC_H
-#include "../include/valType.h"
+#include "valType.h"
 #include<utils.h>
 #include<ku_proc.h>
 

@@ -12,7 +12,8 @@ ldpath=-L../lib/
 
 #usro= usr/lib/asmtask.o usr/lib/sys_call.o usr/lib/utils.o
 #asmo=../lib/kernel_asm.o ../lib/proc_asm.o ../lib/utils_asm.o
-usro= ../src/usr/lib/asmtask.o ../src/usr/lib/sys_call.o ../src/usr/lib/utils.o
+usro= ../src/usr/lib/asmtask.o ../src/usr/lib/sys_call.o ../src/usr/lib/utils.o\
+	  ../src/usr/lib/unistd.o
 #the target of a rule matchs in a stiff way,kernel.a will match '%.a:%.asm' but
 #../lib/kernel.a won't.
 asmo=kernel.asmo proc.asmo utils.asmo
@@ -22,7 +23,7 @@ kernelrelyo=$(asmo) $(usro)  $(co)
 include $(co:.o=.d)
 
 boot.bin:boot.asm
-	nasm -o boot.bin boot.asm
+	nasm -o ../bin/boot.bin boot.asm
 kernel.elf:$(kernelrelyo)
 	cd ../lib/;\
 	ld -m elf_i386 -s -Ttext 0x30400 -o ../bin/kernel.elf $(kernelrelyo);\

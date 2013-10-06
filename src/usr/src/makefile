@@ -6,7 +6,7 @@ asm=nasm
 
 libdir:= ../lib
 
-all: $(libdir) sys_call.o utils.o asmtask.o
+all: $(libdir) sys_call.o utils.o asmtask.o unistd.o
 
 .PHONY:all
 
@@ -23,6 +23,7 @@ utils.o:utils.c ../include/utils.h
 
 asmtask.o:asmtask.asm
 	$(asm) -felf -o ../lib/asmtask.o asmtask.asm $(asmflags)
-
+unistd.o:unistd.c ../include/unistd.h
+	$(cc) -c -o ../lib/unistd.o unistd.c $(cflags)
 clean:
 	rm -rf $(libdir)
