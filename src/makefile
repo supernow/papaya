@@ -1,4 +1,4 @@
-all:boot.bin kernel.elf
+all:boot.bin kernel.elf ../cmd/dimg
 #'make' will search target-file and rely-file according through VPATH,if she
 #failed under current directory.
 VPATH=../lib/ ../bin/
@@ -27,6 +27,8 @@ kernel.elf:$(kernelrelyo)
 	cd ../lib/;\
 	ld -m elf_i386 -s -Ttext 0x30400 -o ../bin/kernel.elf $(kernelrelyo);\
 	ld -m elf_i386 -Ttext 0x30400 -o ../bin/g_kernel.elf $(kernelrelyo) 
+../cmd/dimg:../cmd/dimg.c
+	gcc -o  ../cmd/dimg ../cmd/dimg.c -std=c99
 %.d:%.c
 	set -e;rm -f $@;\
 	gcc -M $< $(cheader_path) > this_is_a_tmp_file;\
@@ -39,9 +41,14 @@ kernel.elf:$(kernelrelyo)
 %.asmo: %.asm ../include/*.inc
 	nasm -felf -o ../lib/$@ $< $(asmflags)
 clean:
-	rm  -rf ../lib/*;\
-	rm -f *.d;rm -f ../cmd/parport.out;rm -f usr/lib/*\
-	rm -f ../bin/*
+	rm  -f ../lib/*;\
+	rm -f *.d;
+#replace your 400m.img to after using make git
+git:
+	rm  -f ../lib/*;rm -f ../bin/*;rm -f *.d;\
+	rm -f ../cmd/parport.out ../cmd/dimg;\
+	rm -f usr/lib/*;\
+	-mv ../cmd/400m.img ../..
 .PHONY:all
 
 
