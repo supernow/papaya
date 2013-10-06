@@ -48,7 +48,7 @@ git:
 	rm  -f ../lib/*;rm -f ../bin/*;rm -f *.d;\
 	rm -f ../cmd/parport.out ../cmd/dimg;\
 	rm -f usr/lib/*;\
-	-mv ../cmd/400m.img ../..
+	mv ../cmd/400m.img ../..
 .PHONY:all
 
 
