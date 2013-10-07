@@ -62,12 +62,12 @@ void tty(void){
 	__asm__("cli");
 	loadbuf=kmalloc(SIZE_LOAD_BUF);
 	oprintf("tty running..welcome^.^\n");
-	oprintf("char %c",0);
 	buff=kmalloc(23);
 	for(int j=0;j<0;j++){
 		oprintf("j=%u,i will do open\n",j);
 		int fd=open("/mnt/home/wws/dimg",0);
-		oprintf("fd:%u,errno:%d,inode:%u\n",fd,errno,fd_table[fd].inode);
+		oprintf("fd:%u,errno:%u,inode:%u\n",fd,errno,fd_table[fd].inode);
+		errno=2;
 		int newseek=lseek(fd,-2,2);
 		int r_bytes=read(fd,tmp,7);
 //		oprintf("r_bytes:%u,newseek:%u\n",r_bytes,newseek);
@@ -203,7 +203,14 @@ static void ls(char*path){
 //	oprintf("%s\n",loadbuf);
 }
 static void cat(char*path){
-	loadfile(path,loadbuf);
+//	loadfile(path,loadbuf);
+	int fd=open(path,0);
+	if(fd==-1) return;
+	int size=lseek(fd,0,2)+1;
+	oprintf("i want to read %u bytes\n",size);
+	lseek(fd,900,0);
+	int r_bytes=read(fd,loadbuf,size);
+	close(fd);
 	oprintf("%s\n",loadbuf);
 }
 static int cmd_asciis_nextword(void){//aim:adjust pt_cmd

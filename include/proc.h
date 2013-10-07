@@ -187,19 +187,6 @@ do{\
 /**system call always return a value,obviouslly we can not write like 'rerurn xx',but things are similarily easy,just set the 'eax'-field of process who traps into kernel mod*/
 #define SET_PID_EAX(pid,return_val)	pcb_table[pid].regs.eax=return_val
 
-/**following two macros can only be called out-of-proc,and,the process who just
- * trapped into kernel mod will be fired immediately.
- * it return a value to the process who just asked a 'syscall' and set the errno
- */
-#define SYSCALL_RET_TO(pid,return_var,return_errno)\
-	do{ERRNO(pid)=return_errno;SET_PID_EAX(pid,return_var);SLEEP_ACTIVE(pid);fire(pid);} while(0)
-#define SYSCALL_RET(return_var,return_errno) SYSCALL_RET_TO(pcb_table_info.curr_pid,return_var,return_errno)
-/*following macro can only be called within proc,such as fs_ext,the difference is that they will not call 'fire(pid)' immediately,so we call it 'soft'.In most case,a kernel-process will surrender it's timeslice after finishing jobs,we trust it and never use 'fire(pid)' to snatch it's timeslice.*/
-#define SYSCALL_SOFT_RET_TO(pid,return_var,return_errno)\
-	do{ERRNO(pid)=return_errno;SET_PID_EAX(pid,return_var);SLEEP_ACTIVE(pid);} while(0)
-/**an impossible right macro,guess why?
- * #define SYSCALL_SOFT_RET(return_var,return_errno) SYSCALL_SOFT__RET_TO(pcb_table_info.curr_pid,return_var,return_errno)*/
-
 void proc_dispatch(void);
 int pickNext(void);
 void fire(int pid);

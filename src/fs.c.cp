@@ -42,18 +42,18 @@ int askfs(int command,
 	 * */
     if(false == is_fd_valid(fd,command) ){
 	    oprintf("kernel error:@ fd not valid\n");
-	    syscall_ret(-1,EUNDEF);
+	    SYSCALL_RET(-1,EUNDEF);
 	}
 
 	FS_COMMAND*cmd=new_cmd();/*allocate a new fs sys-call*/
 
 	if(!cmd){
 		oprintf("kernel error:@fs empty_cmds used out,fs sub-system might be busy\n");
-		syscall_ret(-1,EUNDEF);
+		SYSCALL_RET(-1,EUNDEF);
 	}
 	if(command==COMMAND_CLOSE){
 		fd_table[fd].device=DEVICE_NULL;
-		syscall_ret(0,-1);
+		SYSCALL_RET(0,-1);
 	}
 	else if(command==COMMAND_SEEK){
 		oprintf("@fs handle COMMAND_SEEK..\n");
@@ -79,7 +79,7 @@ int askfs(int command,
 			oprintf("@fs_ext seek sucess,return now=%u",newseek);
 		}
 
-		syscall_ret(newseek,-1);
+		SYSCALL_RET(newseek,-1);
 	}
 	else if(command==COMMAND_OPEN){
 		/**
@@ -92,7 +92,7 @@ int askfs(int command,
 		fd=new_fd();
 		if(fd==-1){
 			oprintf("kernel error:@fs file-desc runs out\n");
-			syscall_ret(-1,ENFILE);
+			SYSCALL_RET(-1,ENFILE);
 		}
 
 		fd_table[fd].flags=flags;
@@ -115,7 +115,7 @@ int askfs(int command,
 		}
 		if(i==MAX_MOUNT_INFO){
 			oprintf("bad mountpoint of path '%s'\n",path);
-			syscall_ret(-1,ENOENT);
+			SYSCALL_RET(-1,ENOENT);
 		}
 	}
 	else if(command==COMMAND_READ||command==COMMAND_WRITE){
@@ -159,7 +159,7 @@ int askfs(int command,
 	return 0;
 	/**we  write 'retun 0' just for cheating the compiler,
 	 * the routin will never touch here. 
-	 * kernel returns a value to usr-process via 'syscall_ret'*/
+	 * kernel returns a value to usr-process via 'SYSCALL_RET'*/
 }
 /*bug:empty_cmds should be all 0 at first,but it turned out not */
 void init_fs(void){

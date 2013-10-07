@@ -279,3 +279,34 @@ unsigned char obuffer_shift(OBUFFER* pt_obuffer){
 	return c;
 }
 
+/**following two functions can only be called out-of-proc,then,process recently
+ * trapped into kernel will be fired immediately.
+ * it return a value and errno to the process who just does a 'syscall'.set 
+ * return_errno -1 when the syscall done successfully.
+ */
+void syscall_ret_to(int pid,int return_val,int return_errno){
+	if(return_errno!=-1) ERRNO(pid)=return_errno;
+	SET_PID_EAX(pid,return_val);
+	SLEEP_ACTIVE(pid);
+	fire(pid);
+}
+
+void syscall_ret(int return_val,int return_errno){
+	int pid=pcb_table_info.curr_pid;
+	if(return_errno!=-1) ERRNO(pid)=return_errno;
+	SET_PID_EAX(pid,return_val);
+	SLEEP_ACTIVE(pid);
+	fire(pid);
+}
+
+
+/*following function can only be called within proc,like fs_ext,the difference 
+ * is that they will not call 'fire(pid)' immediately,so we call it 'soft'.In m
+ * ost case,a kernel-process will surrender it's timeslice after finishing jobs,
+ * we trust it and never use 'fire(pid)' to snatch it's timeslice.*/
+void syscall_soft_ret_to(int pid,int return_val,int return_errno){
+	if(return_errno!=-1) ERRNO(pid)=return_errno;
+	SET_PID_EAX(pid,return_val);
+	SLEEP_ACTIVE(pid);
+}
+

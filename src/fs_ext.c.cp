@@ -67,20 +67,20 @@ void fs_ext(void){
 				INODE*pinode=getInode(inode);
 				fd_table[cmd.fd].inode=inode;
 				fd_table[cmd.fd].filesize=pinode->i_size;
-				syscall_soft_ret_to(cmd.asker,cmd.fd,22);//a bug macro now,can you awake tty?	
+				SYSCALL_SOFT_RET_TO(cmd.asker,cmd.fd,22);//a bug macro now,can you awake tty?	
 			}
 			else{
 				oprintf("fs_ext error:can not getInodeByPath\n");
 				releasefd(cmd.fd);//k_open failed,release the burning file_desc
-				syscall_soft_ret_to(cmd.asker,-1,0x23);
+				SYSCALL_SOFT_RET_TO(cmd.asker,-1,0x23);
 			}
 		}
 		else if(cmd.command==COMMAND_READ){
 			int r_bytes=loadpart();
-			syscall_soft_ret_to(cmd.asker,r_bytes,0xff);
+			SYSCALL_SOFT_RET_TO(cmd.asker,r_bytes,0xff);
 		}
 		else if(cmd.command==COMMAND_WRITE){
-			syscall_soft_ret_to(cmd.asker,-1,0xff);
+			SYSCALL_SOFT_RET_TO(cmd.asker,-1,0xff);
 		}
 		else{
 			assert(0)
