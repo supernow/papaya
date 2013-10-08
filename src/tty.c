@@ -209,7 +209,7 @@ static void cat(char*path){
 	int size=lseek(fd,0,2)+1;
 	oprintf("i want to read %u bytes\n",size);
 	lseek(fd,900,0);
-	int r_bytes=read(fd,loadbuf,size);
+	int r_bytes=read(fd,loadbuf,20);
 	close(fd);
 	oprintf("%s\n",loadbuf);
 }

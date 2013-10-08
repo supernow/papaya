@@ -1,6 +1,7 @@
 #ifndef ERRNO_H
 #define ERRNO_H
 #define errno (ERRNO(getpid()))
+#define ESUCCESS -1/* operation successful,we don't set errno -1,just leave it as is*/
 #define EPERM 1 /* Operation not permitted */
 #define ENOENT 2 /* No such file or directory */
 #define ESRCH 3 /* No such process */
